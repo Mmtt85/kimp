@@ -91,9 +91,12 @@
       " / " +
       parseFloat(upbit).toFixed(1).toLocaleString();
 
-    const premiumStr =
-      parseFloat(((upbitYen - bb) / bb) * 100).toFixed(2) + "%";
+    const premium = parseFloat(((upbitYen - bb) / bb) * 100).toFixed(2);
+    const premiumStr = premium + "%";
 
+    document.querySelector(".premium").style.color = `rgb(${
+      premium * 100 > 255 ? 255 : premium * 100
+    }, 0, 0)`;
     document.getElementById("bb").innerText = bbStr;
     document.getElementById("upbit").innerText = upbitStr;
     document.getElementById("premium").innerText = premiumStr;
@@ -115,9 +118,6 @@
   }, 1000);
 </script>
 <style>
-  .premium {
-    color: rgb(255, 107, 107);
-  }
   div {
     padding: 5px 0px;
     text-align: center;
