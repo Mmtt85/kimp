@@ -3,6 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
     <title></title>
   </head>
   <body>
@@ -18,6 +19,16 @@
       <h2>
         환율 수동입력:
         <input id="rate_manual" value="" placeholder="ex) 9.2138" />
+        <button id="capture" class="capture" onclick="startCapture()">
+          캡쳐
+        </button>
+        <span>
+          <span>아래 환율사이트가 정상적으로 로드된 상태에서</span>
+          <br />
+          <span>구글탭 - 자기자신을 선택하거나</span>
+          <br />
+          <span>창 - 첫번째 창을 선택해주세요</span>
+        </span>
       </h2>
       (미입력시 <span id="rate_auto"> - </span>로 계산)
       <span id="err_rate_manual" class="error"></span>
@@ -109,6 +120,48 @@
     iframe.src = iframe.src; // 리프레쉬를 위한 코드임. 이 코드가 없으면 리프레쉬가 안됨.
   };
 
+  async function startCapture() {
+    const button = document.getElementById("capture");
+    button.textContent = "캡쳐중...";
+    button.disabled = true;
+    try {
+      // 화면을 공유하는 스트림을 요청
+      const stream = await navigator.mediaDevices.getDisplayMedia({
+        video: true,
+      });
+
+      // 스트림의 비디오 트랙을 가져옴
+      const video = document.createElement("video");
+      video.srcObject = stream;
+      video.play();
+
+      // 비디오가 로드된 후 캔버스에 그리기
+      video.onloadedmetadata = () => {
+        const canvas = document.createElement("canvas");
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+
+        const ctx = canvas.getContext("2d");
+        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+        const imgData = canvas.toDataURL("image/png");
+
+        (async () => {
+          Tesseract.recognize(imgData, "eng").then(({ data: { text } }) => {
+            const split_text = text.split("\n");
+            document.getElementById("rate_manual").value =
+              split_text[split_text.length - 4].split(" ")[0];
+          });
+        })();
+
+        stream.getTracks().forEach((track) => track.stop());
+      };
+    } finally {
+      button.textContent = "캡쳐";
+      button.disabled = false;
+    }
+  }
+
   setInterval(() => {
     document.querySelector("#remain_times").innerText = counter;
     if (counter == 0) {
@@ -133,5 +186,18 @@
   }
   .div-iframe {
     padding: 10px;
+  }
+  .capture:hover ~ span {
+    display: unset;
+  }
+  .capture ~ span {
+    font-size: 10pt;
+    position: absolute;
+    transform: translate(-80px, -50px);
+    display: none;
+    border: 1px solid gray;
+    border-radius: 5px;
+    padding: 2px;
+    background-color: whitesmoke;
   }
 </style>
