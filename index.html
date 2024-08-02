@@ -6,18 +6,29 @@
     <title>3.30%</title>
   </head>
   <body>
-    <h1>JPY-XRP 프리미엄 계산기</h1>
-    <h2>BitBank: <span id="bb"></span></h2>
-    <h2>UpBit: <span id="upbit"></span></h2>
-    <h2>Premium: <span id="premium"></span></h2>
-    <h2>
-      환율 수동입력:
-      <input id="rate_manual" value="" placeholder="ex) 9.2138" />
-    </h2>
-    <a target="_blank" href="https://kr.investing.com/currencies/jpy-krw">
-      환율사이트(investing.com)
-    </a>
-    <h3>다음 갱신까지... <span id="remain_times"></span>초</h3>
+    <span>다음 갱신까지... <span id="remain_times"></span>초</span>
+    <div>
+      <h1>JPY-XRP 프리미엄 계산기</h1>
+      <h2>BitBank: <span id="bb"></span></h2>
+      <h2>UpBit: <span id="upbit"></span></h2>
+      <h2>Premium: <span id="premium"></span></h2>
+      <h2>
+        환율 수동입력:
+        <input id="rate_manual" value="" placeholder="ex) 9.2138" />
+      </h2>
+    </div>
+    <div>
+      <a target="_blank" href="https://kr.investing.com/currencies/jpy-krw">
+        환율사이트 (아래 사이트가 정상적으로 표시되지 않는다면)
+      </a>
+    </div>
+    <div id="div_iframe">
+      <iframe
+        id="iframe"
+        src="http://kr.investing.com/currencies/jpy-krw"
+        style="width: 400px; height: 400px"
+      ></iframe>
+    </div>
   </body>
 </html>
 
@@ -87,16 +98,8 @@
   }, 1000);
 </script>
 <style>
-  body {
-    position: absolute;
-    top: 30%;
-    left: 20%;
-    transform: translate(-50%, -50%);
-    -ms-transform: translate(-50%, -50%); /* IE 9 */
-    -webkit-transform: translate(-50%, -50%); /* Chrome, Safari, Opera */
-  }
-  body,
-  h1 {
-    margin: 0;
+  div {
+    padding: 5px 0px;
+    text-align: center;
   }
 </style>
