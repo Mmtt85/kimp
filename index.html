@@ -34,6 +34,12 @@
         style="width: 400px; height: 400px"
         loading="lazy"
       ></iframe>
+      <button
+        onclick="refresh_iframe()"
+        style="position: absolute; margin: 0px 5px"
+      >
+        리프레쉬
+      </button>
     </div>
   </body>
 </html>
@@ -92,6 +98,11 @@
     document.getElementById("upbit").innerText = upbitStr;
     document.getElementById("premium").innerText = premiumStr;
     document.querySelector("title").innerText = premiumStr;
+  };
+
+  const refresh_iframe = () => {
+    const iframe = document.getElementById("iframe");
+    iframe.src = iframe.src; // 리프레쉬를 위한 코드임. 이 코드가 없으면 리프레쉬가 안됨.
   };
 
   setInterval(() => {
