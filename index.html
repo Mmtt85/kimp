@@ -109,45 +109,49 @@
     button.textContent = "데이터 추출중...";
     button.disabled = true;
 
-    // 화면을 공유하는 스트림을 요청
-    const stream = await navigator.mediaDevices.getDisplayMedia({
-      video: true,
-    });
+    try {
+      // 화면을 공유하는 스트림을 요청
+      const stream = await navigator.mediaDevices.getDisplayMedia({
+        video: true,
+      });
 
-    // 스트림의 비디오 트랙을 가져옴
-    const video = document.createElement("video");
-    video.srcObject = stream;
-    video.play();
+      // 스트림의 비디오 트랙을 가져옴
+      const video = document.createElement("video");
+      video.srcObject = stream;
 
-    // 비디오가 로드된 후 캔버스에 그리기
-    video.onloadedmetadata = async () => {
-      const canvas = document.createElement("canvas");
-      canvas.width = video.videoWidth;
-      canvas.height = video.videoHeight;
-      const ctx = canvas.getContext("2d");
-      ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+      video.play();
 
-      const imgData = canvas.toDataURL("image/png");
+      // 비디오가 로드된 후 캔버스에 그리기
+      video.onloadedmetadata = async () => {
+        const canvas = document.createElement("canvas");
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        const ctx = canvas.getContext("2d");
+        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
 
-      // base64 이미지 데이터를 Tesseract에 보내 텍스트 추출
-      Tesseract.recognize(imgData, "eng").then(({ data: { text } }) => {
-        const split_text = text.split("\n");
-        split_text.forEach((t) => {
-          t.split(" ").forEach((tt) => {
-            const result = /^\d+\.\d{4}$/g.test(tt);
-            if (result) {
-              document.querySelector("#rate_manual").value = tt;
-              return false;
-            }
-          });
+        _.forEach(stream.getTracks(), (track) => track.stop());
+
+        const imgData = canvas.toDataURL("image/png");
+
+        // base64 이미지 데이터를 Tesseract에 보내 텍스트 추출
+        const result = await Tesseract.recognize(imgData, "eng");
+        const text = _.get(result, "data.text");
+        const split_text = _.split(text, /\n| /g);
+        _.forEach(split_text, (t) => {
+          const result = /^\d+\.\d{4}$/g.test(t);
+          if (result) {
+            document.querySelector("#rate_manual").value = t;
+            return false;
+          }
         });
 
         button.textContent = "캡쳐";
         button.disabled = false;
-      });
-
-      _.forEach(stream.getTracks(), (track) => track.stop());
-    };
+      };
+    } catch (error) {
+      button.textContent = "캡쳐";
+      button.disabled = false;
+    }
   };
 
   const refresh_iframe = () => {
