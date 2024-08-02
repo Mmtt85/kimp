@@ -9,37 +9,38 @@
   </head>
   <body>
     <div>
+      <br />
       <span>다음 갱신까지... <span id="remain_times"></span>초</span>
     </div>
     <div>
       <h1>JPY-XRP 프리미엄 계산기</h1>
-      <h2>BitBank: <span id="bb"></span></h2>
-      <h2>UpBit: <span id="upbit"></span></h2>
-      <h2>Premium: <span id="premium"></span></h2>
+      <h2>BitBank: <span id="bb"> - </span></h2>
+      <h2>UpBit: <span id="upbit"> - </span></h2>
+      <h2 class="premium">Premium: <span id="premium"> - </span></h2>
       <h2>
         환율 수동입력:
         <input id="rate_manual" value="" placeholder="ex) 9.2138" />
       </h2>
+      (미입력시 <span id="rate_auto"> - </span>로 계산)
       <span id="err_rate_manual" class="error"></span>
     </div>
-    <div>
-      <a target="_blank" href="https://kr.investing.com/currencies/jpy-krw">
-        환율사이트 (아래 사이트가 정상적으로 표시되지 않는다면)
-      </a>
-    </div>
-    <div id="div_iframe">
+    <div id="div_iframe" class="div-iframe">
+      <div>
+        아래 사이트가 정상적으로 표시되지 않는다면:
+        <button onclick="refresh_iframe()">리프레쉬</button>
+      </div>
       <iframe
         id="iframe"
         src="https://kr.investing.com/currencies/jpy-krw"
         style="width: 400px; height: 400px"
         loading="lazy"
       ></iframe>
-      <button
-        onclick="refresh_iframe()"
-        style="position: absolute; margin: 0px 5px"
-      >
-        리프레쉬
-      </button>
+      <div>
+        <a target="_blank" href="https://kr.investing.com/currencies/jpy-krw">
+          환율사이트 직접가기
+        </a>
+        <div>(https://kr.investing.com/currencies/jpy-krw)</div>
+      </div>
     </div>
   </body>
 </html>
@@ -63,12 +64,13 @@
   };
 
   const getRate = async () => {
+    const response = await fetch("https://open.er-api.com/v6/latest/JPY");
+    const data = await response.json();
     const rateManual = document.querySelector("#rate_manual");
     if (rateManual.value) {
       return parseFloat(rateManual.value) * 10;
     } else {
-      const response = await fetch("https://open.er-api.com/v6/latest/JPY");
-      const data = await response.json();
+      document.getElementById("rate_auto").innerText = data.rates.KRW;
       return data.rates.KRW * 10;
     }
   };
@@ -115,12 +117,22 @@
   }, 1000);
 </script>
 <style>
+  .premium {
+    color: rgb(255, 107, 107);
+  }
   div {
     padding: 5px 0px;
     text-align: center;
   }
+  h2 {
+    margin: 0px;
+    padding: 10px 0px 5px 0px;
+  }
   .error {
     color: rgb(255, 107, 107);
     font-size: 10pt;
+  }
+  .div-iframe {
+    padding: 10px;
   }
 </style>
