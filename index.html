@@ -65,10 +65,11 @@
     const response = await fetch("https://open.er-api.com/v6/latest/JPY");
     const data = await response.json();
     const rateManual = document.querySelector("#rate_manual");
+    const rateAuto = document.querySelector("#rate_auto");
+    rateAuto.innerText = data.rates.KRW;
     if (rateManual.value) {
       return parseFloat(rateManual.value) * 10;
     } else {
-      document.getElementById("rate_auto").innerText = data.rates.KRW;
       return data.rates.KRW * 10;
     }
   };
