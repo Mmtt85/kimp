@@ -96,7 +96,7 @@
       "[data-test=instrument-price-last]"
     );
     if (rateFromIframe) {
-      document.querySelector("#rate_manual").value = rateFromIframe.innerText;
+      document.querySelector("#rate_manual").value = rateFromIframe.innerHTML;
       document.querySelector("#err_rate_manual").innerText = "";
     } else {
       document.querySelector("#err_rate_manual").innerText =
