@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.21/lodash.min.js"></script>
-    <title></title>
+    <title>- / -</title>
   </head>
   <body>
     <div>
@@ -85,10 +85,11 @@
   };
   const getRateSite = async () => {
     const rateSite = document.querySelector("#rate_site");
-    console.log(rateSite.value);
+    const iframe = document.querySelector("#iframe");
     if (_.get(rateSite, "value")) {
-      const iframe = document.querySelector("#iframe");
       iframe.src = rateSite.value;
+    } else {
+      iframe.src = "https://kr.investing.com/currencies/jpy-krw";
     }
   };
   const get = async () => {
