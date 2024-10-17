@@ -44,10 +44,13 @@
         loading="lazy"
       ></iframe>
       <div>
-        <a target="_blank" href="https://kr.investing.com/currencies/jpy-krw">
-          환율사이트 직접가기
-        </a>
-        <div>(https://kr.investing.com/currencies/jpy-krw)</div>
+        <input
+          id="rate_site"
+          value=""
+          placeholder="환율사이트 직접입력"
+          style="width: 350px"
+        />
+        <button onclick="getRateSite()">로드</button>
       </div>
     </div>
   </body>
@@ -80,7 +83,14 @@
       return KRW;
     }
   };
-
+  const getRateSite = async () => {
+    const rateSite = document.querySelector("#rate_site");
+    console.log(rateSite.value);
+    if (_.get(rateSite, "value")) {
+      const iframe = document.querySelector("#iframe");
+      iframe.src = rateSite.value;
+    }
+  };
   const get = async () => {
     const [bb, upbit, rate] = await Promise.all([
       getBbXrpPrice(),
@@ -198,5 +208,8 @@
     border-radius: 5px;
     padding: 2px;
     background-color: whitesmoke;
+  }
+  .w-full {
+    width: 100%;
   }
 </style>
