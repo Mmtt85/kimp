@@ -38,6 +38,52 @@
           </tr>
         </tbody>
       </table>
+      <div>
+        <h2>수익 계산기</h2>
+        <div
+          style="
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+          "
+        >
+          <div
+            style="
+              display: flex;
+              flex-direction: column;
+              align-items: flex-start;
+            "
+          >
+            <label>
+              쓴 돈:
+              <input
+                id="spent_money"
+                value=""
+                placeholder="엔"
+                style="width: 100px"
+              />
+              엔
+            </label>
+            <label>
+              번 돈:
+              <input
+                id="earned_money"
+                value=""
+                placeholder="원"
+                style="width: 100px"
+              />
+              원
+            </label>
+          </div>
+          <button onclick="calculateProfit()">계산</button>
+        </div>
+        <div>
+          먹은퍼센트: <span id="profit_percentage"> - </span>%
+          <br />
+          (송금수수료 대략 -2%가량)
+        </div>
+      </div>
       <h2>
         환율 수동입력:
         <input id="rate_manual" value="" placeholder="ex) 9.2138" />
@@ -224,6 +270,24 @@
   const refresh_iframe = () => {
     const iframe = document.querySelector("#iframe");
     iframe.src = iframe.src; // 리프레쉬를 위한 코드임. 이 코드가 없으면 리프레쉬가 안됨.
+  };
+
+  const calculateProfit = async () => {
+    const spentMoney = parseFloat(document.querySelector("#spent_money").value);
+    const earnedMoney = parseFloat(
+      document.querySelector("#earned_money").value
+    );
+    const rate = await getRate(); // Ensure the rate is fetched
+
+    if (!isNaN(spentMoney) && !isNaN(earnedMoney) && !isNaN(rate)) {
+      const spentInWon = spentMoney * rate;
+      const profitPercentage =
+        ((earnedMoney - spentInWon) / spentInWon) * 100 - 2; // -2% for 송금수수료
+      document.querySelector("#profit_percentage").innerText =
+        profitPercentage.toFixed(2);
+    } else {
+      document.querySelector("#profit_percentage").innerText = " - ";
+    }
   };
 
   let counter = 15;
