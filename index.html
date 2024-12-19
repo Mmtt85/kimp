@@ -386,8 +386,6 @@
         "https://kr.investing.com/currencies/jpy-krw"
       );
       const text = await response.text();
-      const sizeInMB = (text.length / (1024 * 1024)).toFixed(2);
-      console.log(`Fetched DOM size: ${sizeInMB} MB`);
       const iframe = document.querySelector("#iframe");
       const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
       iframeDoc.open();
