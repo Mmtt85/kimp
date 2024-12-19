@@ -127,19 +127,27 @@
     </div>
     <div id="alert-modal" class="alert-modal">
       <span id="alert-message"></span>
+      <button id="close-alert" onclick="closeAlert()">닫기</button>
     </div>
   </body>
 </html>
 <script>
+  const closeAlert = () => {
+    const alertModal = document.querySelector("#alert-modal");
+    alertModal.style.display = "none";
+  };
+
   const showAlert = (message) => {
     const alertModal = document.querySelector("#alert-modal");
     const alertMessage = document.querySelector("#alert-message");
     alertMessage.innerText = message;
     alertModal.style.display = "block";
     setTimeout(() => {
-      alertModal.style.display = "none";
-      if (alertQueue.length > 0) {
-        showAlert(alertQueue.shift());
+      if (alertModal.style.display !== "none") {
+        alertModal.style.display = "none";
+        if (alertQueue.length > 0) {
+          showAlert(alertQueue.shift());
+        }
       }
     }, 3000);
   };
@@ -444,6 +452,7 @@
     padding: 5px 10px;
     border-radius: 10px;
     position: relative;
+    overflow-x: auto;
   }
   @media (max-width: 768px) {
     .div_area {
@@ -517,5 +526,12 @@
     padding: 20px;
     border-radius: 10px;
     z-index: 1000;
+  }
+  .alert-modal button {
+    margin-top: 10px;
+    background-color: #dc3545;
+  }
+  .alert-modal button:hover {
+    background-color: #c82333;
   }
 </style>
