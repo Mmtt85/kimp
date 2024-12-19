@@ -83,26 +83,18 @@
     return _.get(jsonData, "data.last");
   };
 
-  const getUpbitPrice = async () => {
-    const response = await fetch(
-      "https://api.upbit.com/v1/ticker?markets=KRW-XRP"
-    );
-    const jsonData = await response.json();
-    return _.get(jsonData, "0.trade_price");
-  };
-
   const getBbSolanaPrice = async () => {
     const response = await fetch("https://public.bitbank.cc/sol_jpy/ticker");
     const jsonData = await response.json();
     return _.get(jsonData, "data.last");
   };
 
-  const getUpbitSolanaPrice = async () => {
+  const getUpbitPrice = async () => {
     const response = await fetch(
-      "https://api.upbit.com/v1/ticker?markets=KRW-SOL"
+      "https://api.upbit.com/v1/ticker?markets=KRW-XRP&markets=KRW-SOL"
     );
     const jsonData = await response.json();
-    return _.get(jsonData, "0.trade_price");
+    return [_.get(jsonData, "0.trade_price"), _.get(jsonData, "1.trade_price")];
   };
 
   const getRate = async () => {
@@ -129,20 +121,29 @@
     }
   };
 
+  const formatNumber = (num) => {
+    return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  };
+
   const get = async () => {
-    const [bbXrp, upbitXrp, bbSolana, upbitSolana, rate] = await Promise.all([
+    const [bbXrp, bbSolana, upbitPrice, rate] = await Promise.all([
       getBbXrpPrice(),
-      getUpbitPrice(),
       getBbSolanaPrice(),
-      getUpbitSolanaPrice(),
+      getUpbitPrice(),
       getRate(),
     ]);
 
+    const [upbitXrp, upbitSolana] = upbitPrice;
+
     const updateTable = (bb, upbit, rate, bbId, upbitId, premiumId) => {
-      const upbitYen = parseFloat(upbit / rate).toFixed(1);
-      const bbWon = parseFloat(bb * rate).toFixed(1);
-      const bbStr = `${parseFloat(bb).toFixed(1)} / ${bbWon}`;
-      const upbitStr = `${upbitYen} / ${upbit}`;
+      const upbitYen = Math.floor(upbit / rate);
+      const bbWon = Math.floor(bb * rate);
+      const bbStr = `${formatNumber(bbWon)}₩<br>(${formatNumber(
+        Math.floor(bb)
+      )}¥)`;
+      const upbitStr = `${formatNumber(upbit)}₩<br>(${formatNumber(
+        upbitYen
+      )}¥)`;
 
       const premium = parseFloat(((upbitYen - bb) / bb) * 100).toFixed(2);
       const premiumStr = `${premium} %`;
@@ -150,8 +151,8 @@
       document.querySelector(premiumId).style.color = `rgb(${
         premium * 100 > 255 ? 255 : premium * 100
       }, 0, 0)`;
-      document.querySelector(bbId).innerText = bbStr;
-      document.querySelector(upbitId).innerText = upbitStr;
+      document.querySelector(bbId).innerHTML = bbStr;
+      document.querySelector(upbitId).innerHTML = upbitStr;
       document.querySelector(premiumId).innerText = premiumStr;
     };
 
