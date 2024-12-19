@@ -11,7 +11,7 @@
   <body>
     <!-- Timer Section -->
     <div class="div_area">
-      <h2 class="badge">타이머</h2>
+      <h2 class="badge">타이머 : <span id="timer">-</span>초 간격</h2>
       <span>다음 갱신까지... <span id="remain_times"></span>초</span>
     </div>
 
@@ -132,6 +132,22 @@
   </body>
 </html>
 <script>
+  const timer = 15;
+  let counter = timer;
+  document.getElementById("timer").innerText = timer;
+
+  const updateTimer = () => {
+    const remain_times = document.querySelector("#remain_times");
+    remain_times.innerText = counter;
+    if (counter === 0) {
+      get();
+      counter = timer;
+    }
+    counter--;
+  };
+
+  setInterval(updateTimer, 1000);
+
   const closeAlert = () => {
     const alertModal = document.querySelector("#alert-modal");
     alertModal.style.display = "none";
@@ -406,17 +422,7 @@
 
   renderSiteDOM();
 
-  let counter = 10;
   getRate();
-  setInterval(() => {
-    const remain_times = document.querySelector("#remain_times");
-    remain_times.innerText = counter;
-    if (counter == 0) {
-      get();
-      counter = 10;
-    }
-    counter--;
-  }, 1000);
 </script>
 
 <style>
