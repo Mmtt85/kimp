@@ -290,7 +290,8 @@
     const earnedMoney = parseFloat(
       document.querySelector("#earned_money").value.replace(/,/g, "")
     );
-    const rate = await getRate(); // Ensure the rate is fetched
+    const rateManual = document.querySelector("#rate_manual").value;
+    const rate = rateManual ? parseFloat(rateManual) : await getRate(); // Use rate_manual if available
 
     if (!isNaN(spentMoney) && !isNaN(earnedMoney) && !isNaN(rate)) {
       const spentInWon = spentMoney * rate;
