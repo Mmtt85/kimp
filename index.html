@@ -273,9 +273,11 @@
   };
 
   const calculateProfit = async () => {
-    const spentMoney = parseFloat(document.querySelector("#spent_money").value);
+    const spentMoney = parseFloat(
+      document.querySelector("#spent_money").value.replace(/,/g, "")
+    );
     const earnedMoney = parseFloat(
-      document.querySelector("#earned_money").value
+      document.querySelector("#earned_money").value.replace(/,/g, "")
     );
     const rate = await getRate(); // Ensure the rate is fetched
 
