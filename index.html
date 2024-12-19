@@ -8,15 +8,36 @@
     <title>- / -</title>
   </head>
   <body>
-    <div>
+    <div style="margin: 0 35%">
       <br />
       <span>다음 갱신까지... <span id="remain_times"></span>초</span>
     </div>
-    <div>
-      <h1>JPY-XRP 프리미엄 계산기</h1>
-      <h2>BitBank: <span id="bb"> - </span></h2>
-      <h2>UpBit: <span id="upbit"> - </span></h2>
-      <h2 class="premium">Premium: <span id="premium"> - </span></h2>
+    <div style="margin: 0 35%">
+      <h1>김치 프리미엄 계산기</h1>
+      <table class="premium-table">
+        <thead>
+          <tr>
+            <th></th>
+            <th>BitBank</th>
+            <th>UpBit</th>
+            <th>Premium</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>XRP</td>
+            <td><span id="bb_xrp"> - </span></td>
+            <td><span id="upbit_xrp"> - </span></td>
+            <td class="premium"><span id="premium_xrp"> - </span></td>
+          </tr>
+          <tr>
+            <td>Solana</td>
+            <td><span id="bb_solana"> - </span></td>
+            <td><span id="upbit_solana"> - </span></td>
+            <td class="premium"><span id="premium_solana"> - </span></td>
+          </tr>
+        </tbody>
+      </table>
       <h2>
         환율 수동입력:
         <input id="rate_manual" value="" placeholder="ex) 9.2138" />
@@ -32,7 +53,7 @@
       (미입력시 <span id="rate_auto"> - </span>로 계산)
       <span id="err_rate_manual" class="error"></span>
     </div>
-    <div id="div_iframe" class="div-iframe">
+    <div id="div_iframe" class="div-iframe" style="margin: 0 35%">
       <div>
         아래 사이트가 정상적으로 표시되지 않는다면:
         <button onclick="refresh_iframe()">리프레쉬</button>
@@ -70,6 +91,20 @@
     return _.get(jsonData, "0.trade_price");
   };
 
+  const getBbSolanaPrice = async () => {
+    const response = await fetch("https://public.bitbank.cc/sol_jpy/ticker");
+    const jsonData = await response.json();
+    return _.get(jsonData, "data.last");
+  };
+
+  const getUpbitSolanaPrice = async () => {
+    const response = await fetch(
+      "https://api.upbit.com/v1/ticker?markets=KRW-SOL"
+    );
+    const jsonData = await response.json();
+    return _.get(jsonData, "0.trade_price");
+  };
+
   const getRate = async () => {
     const response = await fetch("https://open.er-api.com/v6/latest/JPY");
     const jsonData = await response.json();
@@ -83,6 +118,7 @@
       return KRW;
     }
   };
+
   const getRateSite = async () => {
     const rateSite = document.querySelector("#rate_site");
     const iframe = document.querySelector("#iframe");
@@ -92,27 +128,46 @@
       iframe.src = "https://kr.investing.com/currencies/jpy-krw";
     }
   };
+
   const get = async () => {
-    const [bb, upbit, rate] = await Promise.all([
+    const [bbXrp, upbitXrp, bbSolana, upbitSolana, rate] = await Promise.all([
       getBbXrpPrice(),
       getUpbitPrice(),
+      getBbSolanaPrice(),
+      getUpbitSolanaPrice(),
       getRate(),
     ]);
-    const upbitYen = parseFloat(upbit / rate).toFixed(1);
-    const bbWon = parseFloat(bb * rate).toFixed(1);
-    const bbStr = `${parseFloat(bb).toFixed(1)} / ${bbWon}`;
-    const upbitStr = `${upbitYen} / ${upbit}`;
 
-    const premium = parseFloat(((upbitYen - bb) / bb) * 100).toFixed(2);
-    const premiumStr = `${premium} %`;
+    const updateTable = (bb, upbit, rate, bbId, upbitId, premiumId) => {
+      const upbitYen = parseFloat(upbit / rate).toFixed(1);
+      const bbWon = parseFloat(bb * rate).toFixed(1);
+      const bbStr = `${parseFloat(bb).toFixed(1)} / ${bbWon}`;
+      const upbitStr = `${upbitYen} / ${upbit}`;
 
-    document.querySelector(".premium").style.color = `rgb(${
-      premium * 100 > 255 ? 255 : premium * 100
-    }, 0, 0)`;
-    document.querySelector("#bb").innerText = bbStr;
-    document.querySelector("#upbit").innerText = upbitStr;
-    document.querySelector("#premium").innerText = premiumStr;
-    document.querySelector("title").innerText = `${premiumStr} / ${upbit}`;
+      const premium = parseFloat(((upbitYen - bb) / bb) * 100).toFixed(2);
+      const premiumStr = `${premium} %`;
+
+      document.querySelector(premiumId).style.color = `rgb(${
+        premium * 100 > 255 ? 255 : premium * 100
+      }, 0, 0)`;
+      document.querySelector(bbId).innerText = bbStr;
+      document.querySelector(upbitId).innerText = upbitStr;
+      document.querySelector(premiumId).innerText = premiumStr;
+    };
+
+    updateTable(bbXrp, upbitXrp, rate, "#bb_xrp", "#upbit_xrp", "#premium_xrp");
+    updateTable(
+      bbSolana,
+      upbitSolana,
+      rate,
+      "#bb_solana",
+      "#upbit_solana",
+      "#premium_solana"
+    );
+
+    document.querySelector("title").innerText = `${
+      document.querySelector("#premium_xrp").innerText
+    } / ${upbitXrp}`;
   };
 
   const startCapture = async () => {
@@ -212,5 +267,19 @@
   }
   .w-full {
     width: 100%;
+  }
+  .premium-table {
+    width: 100%;
+    text-align: center;
+    border-collapse: collapse;
+    margin-bottom: 10px;
+  }
+  .premium-table th,
+  .premium-table td {
+    padding: 10px;
+    border: 1px solid #ddd;
+  }
+  .premium-table thead tr {
+    background-color: #f2f2f2;
   }
 </style>
