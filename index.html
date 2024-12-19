@@ -90,7 +90,7 @@
       <div>
         먹은퍼센트: <span id="profit_percentage"> - </span>%
         <br />
-        (송금수수료 대략 -2%가량)
+        (송금수수료 위 퍼센트에서 대략 -2%정도)
       </div>
     </div>
 
@@ -295,8 +295,7 @@
 
     if (!isNaN(spentMoney) && !isNaN(earnedMoney) && !isNaN(rate)) {
       const spentInWon = spentMoney * rate;
-      const profitPercentage =
-        ((earnedMoney - spentInWon) / spentInWon) * 100 - 2; // -2% for 송금수수료
+      const profitPercentage = ((earnedMoney - spentInWon) / spentInWon) * 100; // -2% for 송금수수료
       document.querySelector("#profit_percentage").innerText =
         profitPercentage.toFixed(2);
     } else {
