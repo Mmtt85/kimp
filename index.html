@@ -88,7 +88,8 @@
         <button onclick="calculateProfit()">계산</button>
       </div>
       <div>
-        먹은퍼센트: <span id="profit_percentage"> - </span>%
+        먹은퍼센트: <span id="profit_percentage"> - </span>% (약
+        <span id="profit_yen"> - </span>엔)
         <br />
         (송금수수료 위 퍼센트에서 대략 -2%정도)
       </div>
@@ -296,10 +297,13 @@
     if (!isNaN(spentMoney) && !isNaN(earnedMoney) && !isNaN(rate)) {
       const spentInWon = spentMoney * rate;
       const profitPercentage = ((earnedMoney - spentInWon) / spentInWon) * 100; // -2% for 송금수수료
+      const profitInYen = earnedMoney / rate - spentMoney;
       document.querySelector("#profit_percentage").innerText =
         profitPercentage.toFixed(2);
+      document.querySelector("#profit_yen").innerText = profitInYen.toFixed(2);
     } else {
       document.querySelector("#profit_percentage").innerText = " - ";
+      document.querySelector("#profit_yen").innerText = " - ";
     }
   };
 
