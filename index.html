@@ -9,9 +9,12 @@
     <title>- / -</title>
   </head>
   <body>
-    <!-- Timer Section -->
     <div class="div_area">
-      <h2 class="badge">타이머 : <span id="timer">-</span>초 간격</h2>
+      <h2 class="badge">
+        타이머 :
+        <input class="micro" id="timer" value="15" />
+        초 간격
+      </h2>
       <span>다음 갱신까지... <span id="remain_times"></span>초</span>
     </div>
 
@@ -43,7 +46,6 @@
           </tbody>
         </table>
       </div>
-      <!-- Profit Calculator Section -->
     </div>
     <div class="div_area">
       <h2 class="badge">수익 계산기</h2>
@@ -132,16 +134,13 @@
   </body>
 </html>
 <script>
-  const timer = 15;
-  let counter = timer;
-  document.getElementById("timer").innerText = timer;
-
+  let counter = 15;
   const updateTimer = () => {
     const remain_times = document.querySelector("#remain_times");
     remain_times.innerText = counter;
     if (counter === 0) {
       get();
-      counter = timer;
+      counter = document.getElementById("timer").value;
     }
     counter--;
   };
@@ -425,7 +424,7 @@
   getRate();
 </script>
 
-<style>
+<style lang="scss">
   body {
     font-family: "Noto Sans KR", sans-serif;
     font-size: 10pt;
@@ -439,8 +438,13 @@
     margin: 0px;
     padding: 10px 0px 5px 0px;
   }
+  .micro {
+    width: 20px;
+    height: 5px;
+  }
   .mini {
     width: 50px;
+    height: 10px;
   }
   .short {
     width: 100px;
@@ -490,13 +494,19 @@
   }
   .badge {
     position: absolute;
-    top: -10px;
+    top: -14px;
     left: -5px;
     background-color: #007bff;
     color: white;
     padding: 1px 10px;
     border-radius: 10px;
     font-size: 10pt;
+    display: flex;
+    align-items: center; /* Align items vertically centered */
+    input {
+      font-size: 9pt;
+      margin: 0px 5px; /* Add some space between text and input */
+    }
   }
   input {
     padding: 5px;
