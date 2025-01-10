@@ -16,6 +16,9 @@
         초 간격
       </h2>
       <span>다음 갱신까지... <span id="remain_times"></span>초</span>
+      <button class="screenshot-button" onclick="copyToClipboard(this)">
+        스샷찍기
+      </button>
     </div>
 
     <div class="div_area">
@@ -46,6 +49,9 @@
           </tbody>
         </table>
       </div>
+      <button class="screenshot-button" onclick="copyToClipboard(this)">
+        스샷찍기
+      </button>
     </div>
     <div class="div_area">
       <h2 class="badge">수익 계산기</h2>
@@ -98,6 +104,9 @@
         (약 <span id="final_profit_yen"> - </span>엔)
       </div>
       <div>(송금수수료 위 퍼센트에서 대략 -2%정도 한 값)</div>
+      <button class="screenshot-button" onclick="copyToClipboard(this)">
+        스샷찍기
+      </button>
     </div>
 
     <!-- Iframe Section -->
@@ -126,6 +135,9 @@
           loading="lazy"
         ></iframe>
       </div>
+      <button class="screenshot-button" onclick="copyToClipboard(this)">
+        스샷찍기
+      </button>
     </div>
     <div id="alert-modal" class="alert-modal">
       <span id="alert-message"></span>
@@ -419,6 +431,28 @@
     }
   };
 
+  const copyToClipboard = async (button) => {
+    const divArea = button.parentElement;
+    try {
+      const canvas = await html2canvas(divArea, {
+        onclone: (clonedDoc) => {
+          clonedDoc.querySelectorAll(".screenshot-button").forEach((btn) => {
+            btn.style.display = "none";
+          });
+        },
+        scrollX: 0,
+        scrollY: -window.scrollY,
+      });
+      canvas.toBlob((blob) => {
+        const item = new ClipboardItem({ "image/png": blob });
+        navigator.clipboard.write([item]);
+      });
+      showAlert("클립보드에 복사되었습니다.");
+    } catch (error) {
+      handleError(error);
+    }
+  };
+
   renderSiteDOM();
 
   getRate();
@@ -456,10 +490,10 @@
     width: 300px;
   }
   .div_area {
-    margin: 15px 35%;
+    margin: 20px 35%;
     border: 1px solid #ccc;
     background-color: #f9f9f9;
-    padding: 5px 10px;
+    padding: 20px 10px;
     border-radius: 10px;
     position: relative;
   }
@@ -494,12 +528,12 @@
   }
   .badge {
     position: absolute;
-    top: -14px;
-    left: -5px;
+    top: -1px;
+    left: -1px;
     background-color: #007bff;
     color: white;
-    padding: 1px 10px;
-    border-radius: 10px;
+    padding: 0px 10px;
+    border-radius: 8px 0px 10px 0px;
     font-size: 10pt;
     display: flex;
     align-items: center; /* Align items vertically centered */
@@ -549,5 +583,17 @@
   }
   .alert-modal button:hover {
     background-color: #c82333;
+  }
+  .screenshot-button {
+    position: absolute;
+    top: -1px; /* Align with badge */
+    right: -1px;
+    background-color: #28a745;
+    border-radius: 0px 8px 0px 10px;
+    font-size: 10pt;
+    padding: 2px 10px;
+  }
+  .screenshot-button:hover {
+    background-color: #218838;
   }
 </style>
