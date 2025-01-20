@@ -289,12 +289,12 @@
     const updateTable = (bb, upbit, rate, bbId, upbitId, premiumId) => {
       const upbitYen = Math.floor(upbit / rate);
       const bbWon = Math.floor(bb * rate);
-      const bbStr = `${formatNumber(bbWon)}₩<br>(${formatNumber(
-        Math.floor(bb)
-      )}¥)`;
-      const upbitStr = `${formatNumber(upbit)}₩<br>(${formatNumber(
+      const bbStr = `${formatNumber(Math.floor(bb))} ¥<br>(${formatNumber(
+        bbWon
+      )} ₩)`;
+      const upbitStr = `${formatNumber(upbit)} ₩<br>(${formatNumber(
         upbitYen
-      )}¥)`;
+      )} ¥)`;
 
       const premium = parseFloat(((upbitYen - bb) / bb) * 100).toFixed(2);
       const premiumStr = `${premium} %`;
