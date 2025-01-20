@@ -43,6 +43,12 @@
               <td><span id="upbit_solana"> - </span></td>
               <td class="premium"><span id="premium_solana"> - </span></td>
             </tr>
+            <tr>
+              <td>BTC</td>
+              <td><span id="bb_btc"> - </span></td>
+              <td><span id="upbit_btc"> - </span></td>
+              <td class="premium"><span id="premium_btc"> - </span></td>
+            </tr>
           </tbody>
         </table>
         <div class="latest-refresh-datetime">
@@ -208,15 +214,26 @@
     }
   };
 
+  const getBbBtcPrice = async () => {
+    try {
+      const response = await fetch("https://public.bitbank.cc/btc_jpy/ticker");
+      const jsonData = await response.json();
+      return _.get(jsonData, "data.last");
+    } catch (error) {
+      handleError(error);
+    }
+  };
+
   const getUpbitPrice = async () => {
     try {
       const response = await fetch(
-        "https://api.upbit.com/v1/ticker?markets=KRW-XRP&markets=KRW-SOL"
+        "https://api.upbit.com/v1/ticker?markets=KRW-XRP&markets=KRW-SOL&markets=KRW-BTC"
       );
       const jsonData = await response.json();
       return [
         _.get(jsonData, "0.trade_price"),
         _.get(jsonData, "1.trade_price"),
+        _.get(jsonData, "2.trade_price"),
       ];
     } catch (error) {
       handleError(error);
@@ -259,14 +276,15 @@
   };
 
   const get = async () => {
-    const [bbXrp, bbSolana, upbitPrice, rate] = await Promise.all([
+    const [bbXrp, bbSolana, bbBtc, upbitPrice, rate] = await Promise.all([
       getBbXrpPrice(),
       getBbSolanaPrice(),
+      getBbBtcPrice(),
       getUpbitPrice(),
       getRate(),
     ]);
 
-    const [upbitXrp, upbitSolana] = upbitPrice;
+    const [upbitXrp, upbitSolana, upbitBtc] = upbitPrice;
 
     const updateTable = (bb, upbit, rate, bbId, upbitId, premiumId) => {
       const upbitYen = Math.floor(upbit / rate);
@@ -298,10 +316,13 @@
       "#upbit_solana",
       "#premium_solana"
     );
+    updateTable(bbBtc, upbitBtc, rate, "#bb_btc", "#upbit_btc", "#premium_btc");
 
     document.querySelector("title").innerText = `${
       document.querySelector("#premium_xrp").innerText
-    }/${document.querySelector("#premium_solana").innerText}`;
+    }/${document.querySelector("#premium_solana").innerText}/${
+      document.querySelector("#premium_btc").innerText
+    }`;
     latest_refresh_datetime.innerText = new Date().toLocaleString();
   };
 
