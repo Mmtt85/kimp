@@ -45,6 +45,12 @@
             </tr>
           </tbody>
         </table>
+        <div class="latest-refresh-datetime">
+          <span
+            >최종 갱신 시간:
+            <span id="latest_refresh_datetime">----/--/-- --:--:--</span></span
+          >
+        </div>
       </div>
       <button class="screenshot-button" onclick="copyToClipboard(this)">
         스샷찍기
@@ -296,6 +302,7 @@
     document.querySelector("title").innerText = `${
       document.querySelector("#premium_xrp").innerText
     }/${document.querySelector("#premium_solana").innerText}`;
+    latest_refresh_datetime.innerText = new Date().toLocaleString();
   };
 
   const startCapture = async () => {
@@ -487,7 +494,7 @@
     margin: 15px 35%;
     border: 1px solid #ccc;
     background-color: #f9f9f9;
-    padding: 20px 10px;
+    padding: 20px 10px 5px 10px;
     border-radius: 10px;
     position: relative;
   }
@@ -589,5 +596,8 @@
   }
   .screenshot-button:hover {
     background-color: #218838;
+  }
+  .latest-refresh-datetime {
+    padding: 5px 0px 0px 0px;
   }
 </style>
