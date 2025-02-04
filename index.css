@@ -1,0 +1,145 @@
+body {
+  font-family: "Noto Sans KR", sans-serif;
+  font-size: 10pt;
+}
+div {
+  padding: 5px 0px;
+  text-align: center;
+}
+h2 {
+  font-weight: unset;
+  margin: 0px;
+  padding: 10px 0px 5px 0px;
+}
+.micro {
+  width: 20px;
+  height: 5px;
+}
+.mini {
+  width: 50px;
+  height: 10px;
+}
+.short {
+  width: 100px;
+}
+.middle {
+  width: 200px;
+}
+.long {
+  width: 300px;
+}
+.div_area {
+  margin: 15px 35%;
+  border: 1px solid #ccc;
+  background-color: #f9f9f9;
+  padding: 20px 10px 5px 10px;
+  border-radius: 10px;
+  position: relative;
+}
+@media (max-width: 1200px) {
+  .div_area {
+    margin: 15px 5%;
+  }
+}
+@media (max-width: 768px) {
+  .div_area {
+    margin: 15px 5%;
+  }
+}
+.error {
+  color: rgb(255, 107, 107);
+  font-size: 10pt;
+}
+.div-iframe {
+  padding: 10px;
+}
+.w-full {
+  width: 100%;
+}
+.premium-table {
+  width: 100%;
+  text-align: center;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+.premium-table th,
+.premium-table td {
+  padding: 8px;
+  border: 1px solid #ddd;
+}
+.premium-table thead tr {
+  background-color: #f2f2f2;
+}
+.badge {
+  position: absolute;
+  top: -1px;
+  left: -1px;
+  background-color: #007bff;
+  color: white;
+  padding: 0px 10px;
+  border-radius: 8px 0px 10px 0px;
+  font-size: 10pt;
+  display: flex;
+  align-items: center; /* Align items vertically centered */
+  input {
+    font-size: 9pt;
+    margin: 0px 5px; /* Add some space between text and input */
+  }
+}
+input {
+  padding: 5px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 14px;
+}
+input:focus {
+  border-color: #007bff;
+  outline: none;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+button {
+  padding: 5px 10px;
+  border: none;
+  border-radius: 5px;
+  background-color: #007bff;
+  color: white;
+  font-size: 14px;
+  cursor: pointer;
+}
+button:hover {
+  background-color: #0056b3;
+}
+.alert-modal {
+  display: none;
+  position: fixed;
+  top: 30%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 20px;
+  border-radius: 10px;
+  z-index: 1000;
+}
+.alert-modal button {
+  margin-top: 10px;
+  background-color: #dc3545;
+}
+.alert-modal button:hover {
+  background-color: #c82333;
+}
+.screenshot-button {
+  position: absolute;
+  top: -1px; /* Align with badge */
+  right: -1px;
+  background-color: #28a745;
+  border-radius: 0px 8px 0px 10px;
+  font-size: 10pt;
+  padding: 2px 10px;
+}
+.screenshot-button:hover {
+  background-color: #218838;
+}
+.latest-refresh-datetime {
+  padding: 5px 0px 0px 0px;
+}
